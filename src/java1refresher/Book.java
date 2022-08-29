@@ -1,6 +1,6 @@
 package java1refresher;
 
-public class Book {
+public class Book implements Comparable<Book>{
     private String title;
     private String author;
     private boolean read;
@@ -31,6 +31,15 @@ public class Book {
     public String getTitle() {
         return title;
     }
+    public String getAuthor() {
+        return author;
+    }
+    public boolean isRead() {
+        return read;
+    }
+    public int getNumPages() {
+        return numPages;
+    }
 
     public void setTitle(String title) {
         if(title.equals("")) {
@@ -39,11 +48,6 @@ public class Book {
             this.title = title;
         }
     }
-
-    public String getAuthor() {
-        return author;
-    }
-
     public void setAuthor(String author) {
         if(author.equals("")) {
             throw new IllegalArgumentException("The author is required.");
@@ -51,19 +55,9 @@ public class Book {
             this.author = author;
         }
     }
-
-    public boolean isRead() {
-        return read;
-    }
-
     public void setRead(boolean read) {
         this.read = read;
     }
-
-    public int getNumPages() {
-        return numPages;
-    }
-
     public void setNumPages(int numPages) {
         if(numPages < 1 ) {
             throw new IllegalArgumentException("There must be at least one page.");
@@ -80,5 +74,13 @@ public class Book {
                 ", read=" + read +
                 ", numPages=" + numPages +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Book o) {
+        int result = this.title.compareTo(o.title) * -1;
+        if(result == 0)
+            result = (this.numPages - o.numPages) * -1;
+        return result;
     }
 }
