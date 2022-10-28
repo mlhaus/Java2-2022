@@ -2,7 +2,7 @@ package java1refresher;
 
 public class Book implements Comparable<Book>{
     private String title;
-    private String author;
+    private Person author;
     private boolean read;
     private int numPages;
     private static final String DEFAULT_TITLE = "Undefined";
@@ -10,13 +10,21 @@ public class Book implements Comparable<Book>{
 
     public Book() {
         title = DEFAULT_TITLE;
-        author  = DEFAULT_TITLE;
+        author  = new Person();
         read = false;
         numPages = 1;
         bookCount++;
     }
 
-    public Book(String title, String author, boolean read, int numPages) {
+    public Book(String title) {
+        this.title = title;
+        author  = new Person();
+        read = false;
+        numPages = 1;
+        bookCount++;
+    }
+
+    public Book(String title, Person author, boolean read, int numPages) {
         setTitle(title);
         setAuthor(author);
         setRead(read);
@@ -31,7 +39,7 @@ public class Book implements Comparable<Book>{
     public String getTitle() {
         return title;
     }
-    public String getAuthor() {
+    public Person getAuthor() {
         return author;
     }
     public boolean isRead() {
@@ -48,8 +56,8 @@ public class Book implements Comparable<Book>{
             this.title = title;
         }
     }
-    public void setAuthor(String author) {
-        if(author.equals("")) {
+    public void setAuthor(Person author) {
+        if(author == null) {
             throw new IllegalArgumentException("The author is required.");
         } else {
             this.author = author;
@@ -68,17 +76,12 @@ public class Book implements Comparable<Book>{
 
     @Override
     public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", read=" + read +
-                ", numPages=" + numPages +
-                '}';
+        return title + " written by " + author;
     }
 
     @Override
     public int compareTo(Book o) {
-        int result = this.title.compareTo(o.title) * -1;
+        int result = this.title.compareTo(o.title);
         if(result == 0)
             result = (this.numPages - o.numPages) * -1;
         return result;

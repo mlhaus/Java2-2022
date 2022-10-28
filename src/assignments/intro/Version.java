@@ -39,6 +39,9 @@ public class Version {
     }
 
     public Version(int major, int minor, int patch) {
+        if(major < 0 || minor < 0 || patch < 0) {
+            throw new IllegalArgumentException("Negative numbers are not allowed");
+        }
         this.major = major;
         this.minor = minor;
         this.patch = patch;
