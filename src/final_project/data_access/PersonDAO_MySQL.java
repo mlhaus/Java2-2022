@@ -3,6 +3,7 @@ package final_project.data_access;
 import final_project.MyException;
 import java1refresher.Person;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class PersonDAO_MySQL implements MyDAO<Person> {
@@ -20,6 +21,21 @@ public class PersonDAO_MySQL implements MyDAO<Person> {
 
     @Override
     public Person get(int id) throws MyException {
+        return null;
+    }
+
+    @Override
+    public List<Person> get(String str) throws MyException {
+        return null;
+    }
+
+    @Override
+    public List<Person> get(LocalDate date) throws MyException {
+        return null;
+    }
+
+    @Override
+    public List<Person> getAll() throws MyException {
         return null;
     }
 

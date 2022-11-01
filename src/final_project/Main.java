@@ -3,6 +3,7 @@ package final_project;
 import final_project.data_access.MyDAO;
 import final_project.data_access.MyDAOFactory;
 import final_project.data_handlers.AddPerson;
+import final_project.data_handlers.GetPerson;
 import java1refresher.Person;
 
 import java.util.ResourceBundle;
@@ -38,6 +39,7 @@ public class Main {
             };
             choice = UIUtility.showMenuOptions(menuTitle, prompt, menuOptions, scanner, messages);
             if(choice <= 0 || choice > menuOptions.length + 1) {
+                UIUtility.pressEnterToContinue(scanner, messages);
                 continue;
             }
             if(choice == menuOptions.length + 1) {
@@ -50,6 +52,7 @@ public class Main {
                         new AddPerson().handleTask(personDAO, scanner, messages);
                         break;
                     case 2:
+                        new GetPerson().handleTask(personDAO, scanner, messages);
                         break;
                     case 3:
                         break;

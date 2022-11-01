@@ -5,7 +5,10 @@ import java1refresher.Person;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class PersonDAO_CSV implements MyDAO<Person> {
@@ -31,13 +34,24 @@ public class PersonDAO_CSV implements MyDAO<Person> {
                 lineCount++;
                 line = scanner.nextLine();
                 fields = line.split(",");
-                id = Integer.parseInt(fields[0]);
-                firstName = fields[1];
-                lastName = fields[2];
-                height = Integer.parseInt(fields[3]);
-                weight = Double.parseDouble(fields[4]);
-                dateOfBirth = LocalDate.parse(fields[5]);
+                try {
+                    id = Integer.parseInt(fields[0]);
+                    firstName = fields[1];
+                    lastName = fields[2];
+                    height = Integer.parseInt(fields[3]);
+                    weight = Double.parseDouble(fields[4]);
+                    dateOfBirth = LocalDate.parse(fields[5]);
+                } catch(NumberFormatException e) {
+                    throw new MyException("Number error occurred on line " + lineCount + " in file '" + FILE_NAME + "'.");
+                } catch(DateTimeParseException e) {
+                    throw new MyException("Date error occurred on line " + lineCount + " in file '" + FILE_NAME + "'.");
+                }
                 Person person = new Person();
+                for(Person p : list) {
+                    if(p.getId() == id) {
+                        throw new MyException("Duplicate id error occurred on line " + lineCount + " in file '" + FILE_NAME + "'.");
+                    }
+                }
                 person.setId(id);
                 person.setFirstName(firstName);
                 person.setLastName(lastName);
@@ -45,6 +59,9 @@ public class PersonDAO_CSV implements MyDAO<Person> {
                 person.setWeightInPounds(weight);
                 person.setDateOfBirth(dateOfBirth.atStartOfDay());
                 list.add(person);
+                if(id > next_id) {
+                    next_id = id;
+                }
             }
             
         } catch(FileNotFoundException e) {
@@ -56,16 +73,107 @@ public class PersonDAO_CSV implements MyDAO<Person> {
     public void add(Person obj) throws MyException {
         obj.setId(++next_id);
         list.add(obj);
-        System.out.println(list);
         saveToFile();
     }
 
-    private void saveToFile() {
-
+    private void saveToFile() throws MyException{
+        try(FileWriter writer = new FileWriter(FILE_NAME)) {
+            String line = "id,firstName,lastName,heightInInches,weightInPounds,dateOfBirth";
+            writer.write(line + "\n");
+            for(Person person: list) {
+                line = person.getId() + ","
+                        + person.getFirstName() + ","
+                        + person.getLastName() + ","
+                        + person.getHeightInInches() + ","
+                        + person.getWeightInPounds() + ","
+                        + person.getDateOfBirth().toLocalDate();
+                writer.write(line + "\n");
+            }
+        } catch(IOException e) {
+            throw new MyException("File '" + FILE_NAME + "' not found");
+        }
     }
 
     @Override
     public Person get(int id) throws MyException {
+        try(Scanner in = new Scanner(new File(FILE_NAME))){
+            String line = in.nextLine();
+            while(in.hasNextLine()){
+                line = in.nextLine();
+                String[] fields = line.split(",");
+                if(id == Integer.parseInt(fields[0])) {
+                    Person person = new Person();
+                    person.setId(id);
+                    person.setFirstName(fields[1]);
+                    person.setLastName(fields[2]);
+                    person.setHeightInInches(Integer.parseInt(fields[3]));
+                    person.setWeightInPounds(Double.parseDouble(fields[4]));
+                    person.setDateOfBirth(LocalDate.parse(fields[5]).atStartOfDay());
+                    return person;
+
+                }
+            }
+        } catch(FileNotFoundException e){
+
+        }
+        return null;
+    }
+
+    @Override
+    public List<Person> get(String str) throws MyException {
+        List<Person> result = new ArrayList<>();
+        try(Scanner in = new Scanner(new File(FILE_NAME))){
+            String line = in.nextLine();
+            while(in.hasNextLine()){
+                line = in.nextLine();
+                String[] fields = line.split(",");
+                String fName = fields[1].toLowerCase();
+                String lName = fields[2].toLowerCase();
+                if(fName.contains(str.toLowerCase()) || lName.contains(str.toLowerCase()) 
+                        || fName.concat(" ".concat(lName)).equals(str.toLowerCase())) {
+                    Person person = new Person();
+                    person.setId(Integer.parseInt(fields[0]));
+                    person.setFirstName(fields[1]);
+                    person.setLastName(fields[2]);
+                    person.setHeightInInches(Integer.parseInt(fields[3]));
+                    person.setWeightInPounds(Double.parseDouble(fields[4]));
+                    person.setDateOfBirth(LocalDate.parse(fields[5]).atStartOfDay());
+                    result.add(person);
+                }
+            }
+        } catch(FileNotFoundException e){
+            
+        }
+        return result;
+    }
+
+    @Override
+    public List<Person> get(LocalDate date) throws MyException {
+        List<Person> result = new ArrayList<>();
+        try(Scanner in = new Scanner(new File(FILE_NAME))){
+            String line = in.nextLine();
+            while(in.hasNextLine()){
+                line = in.nextLine();
+                String[] fields = line.split(",");
+                if(date.equals(LocalDate.parse(fields[5]))) {
+                    Person person = new Person();
+                    person.setId(Integer.parseInt(fields[0]));
+                    person.setFirstName(fields[1]);
+                    person.setLastName(fields[2]);
+                    person.setHeightInInches(Integer.parseInt(fields[3]));
+                    person.setWeightInPounds(Double.parseDouble(fields[4]));
+                    person.setDateOfBirth(LocalDate.parse(fields[5]).atStartOfDay());
+                    result.add(person);
+                }
+            }
+        } catch(FileNotFoundException e){
+
+        }
+        return result;
+    }
+
+    @Override
+    public List<Person> getAll() throws MyException {
         return null;
     }
 
