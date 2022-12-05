@@ -1,18 +1,24 @@
 package final_project;
 
+import final_project.data_handlers.UpdatePerson;
 import final_project.data_access.MyDAO;
 import final_project.data_access.MyDAOFactory;
 import final_project.data_handlers.AddPerson;
+import final_project.data_handlers.DeletePerson;
 import final_project.data_handlers.GetPerson;
+import java1refresher.Book;
 import java1refresher.Person;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String data_source = "csv";
-        MyDAO<Person> personDAO = MyDAOFactory.getMyDAO(data_source);
+        String data_source = "mysql";
+        List<MyDAO> data_objects = MyDAOFactory.getMyDAO(data_source);
+        MyDAO<Person> personDAO = data_objects.get(0);
+        MyDAO<Book> bookDAO = data_objects.get(1);
         if(personDAO == null) {
             System.out.println("Person data object not found");
             return;
@@ -55,8 +61,10 @@ public class Main {
                         new GetPerson().handleTask(personDAO, scanner, messages);
                         break;
                     case 3:
+                        new UpdatePerson().handleTask(personDAO, scanner, messages);
                         break;
                     case 4:
+                        new DeletePerson().handleTask(personDAO, scanner, messages);
                         break;
                     case 5:
                         language.setMessages(scanner);

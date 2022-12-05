@@ -1,14 +1,20 @@
 package java1refresher;
 
+import java.time.LocalDate;
+
 public class Book implements Comparable<Book>{
+    private int id;
     private String title;
     private Person author;
     private boolean read;
     private int numPages;
+    private double unitPrice;
+    private LocalDate datePublished;
     private static final String DEFAULT_TITLE = "Undefined";
     private static int bookCount = 0;
 
     public Book() {
+        
         title = DEFAULT_TITLE;
         author  = new Person();
         read = false;

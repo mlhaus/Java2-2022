@@ -13,6 +13,5 @@ public interface MyDAO<T> {
     List<T> get(LocalDate date) throws MyException;
     List<T> getAll() throws MyException;
     void set(int id, T obj) throws MyException;
-    T remove(int id) throws MyException;
-    T remove(T obj) throws MyException;
+    boolean remove(T obj) throws MyException;
 }

@@ -1,7 +1,7 @@
 package final_project.data_handlers;
 
-import final_project.data_access.MyDAO;
 import final_project.MyException;
+import final_project.data_access.MyDAO;
 
 import java.util.ResourceBundle;
 import java.util.Scanner;

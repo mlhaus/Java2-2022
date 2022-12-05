@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
-public class Person { // implements Comparable<Person>
-    
+public class Person implements Comparable<Person> { // implements Comparable<Person>
+    @Override
+    public int compareTo(Person o) {
+        return this.lastName.compareTo(o.lastName);
+    }
+
     private int id;
     private String firstName;
     private String lastName;
